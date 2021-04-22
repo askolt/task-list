@@ -1,4 +1,4 @@
-<p align="center"><a href="https://github.com/askolt/task-list" target="_blank"><img src="https://github.com/askolt/task-list/tree/master/public/preview.png" width="400"></a></p>
+<p align="center"><a href="https://github.com/askolt/task-list" target="_blank"><img src="https://github.com/askolt/task-list/blob/master/public/preview.png?raw=true" width="400"></a></p>
 
 <p align="center">
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
