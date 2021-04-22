@@ -92,7 +92,6 @@ class Task
     public function toArray(): array
     {
         return [
-            'id' => $this->iTaskId,
             'uuid' => $this->sUuid,
             'name' => $this->sName,
             'description' => $this->sDescription,
