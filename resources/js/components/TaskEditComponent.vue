@@ -102,16 +102,18 @@
         methods: {
             saveTask () {
                 let _this = this;
+                this.errors = [];
                 axios.post('/public/task/save', this.task)
                     .then(function (response) {
-                }).catch(function (error) {
-                    if (error.response.status === 422) {
-                        _this.errors = error.response.data.errors;
-                    } else {
-                        alert('Happened some error. Watch the error in Console Log (F12) for details.');
-                        console.log(error);
-                    }
-                })
+                        _this.$emit('aftersave');
+                    }).catch(function (error) {
+                        if (error.response.status === 422) {
+                            _this.errors = error.response.data.errors;
+                        } else {
+                            alert('Happened some error. Watch the error in Console Log (F12) for details.');
+                            console.log(error);
+                        }
+                    })
             },
             closeModalBtn () {
                 $('#editTaskModal').modal('hide');

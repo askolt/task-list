@@ -3,7 +3,7 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <a href="#" class="btn btn-success" v-on:click="addTaskBtn({})">Add</a>
-                <task-edit-component v-bind:task="taskEdit"></task-edit-component>
+                <task-edit-component v-bind:task="taskEdit" v-on:aftersave="loadTaskList"></task-edit-component>
             </div>
         </div>
         <div class="row justify-content-center" v-for="task in tasks">
