@@ -4,6 +4,7 @@ namespace App\Storage\Eloquent;
 
 use App\Models\TaskModel;
 use App\Storage\TaskStorageInterface;
+use Illuminate\Database\Eloquent\Model;
 
 class TaskEloquentStorage implements TaskStorageInterface
 {
@@ -33,6 +34,11 @@ class TaskEloquentStorage implements TaskStorageInterface
         return $oObject->delete();
     }
 
+    /***
+     * @param $oObject Model
+     * @param array $aData
+     * @return mixed
+     */
     public function save($oObject, array $aData)
     {
         foreach ($aData as $key => $value) {

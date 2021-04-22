@@ -61,14 +61,37 @@ class TaskRepository implements TaskRepositoryInterface
 
     public function save($aData)
     {
-        if (empty($aData['uuid'])) {
-            $oTask = Task::draft(0, $aData['name'], $aData['description']);
-        } else {
-            $oTask = $this->oStorageTask->find($aData['uuid']);
+        try {
+            $oTaskDraft = Task::draft($aData);
+        } catch (\Exception $exception) {
+            return [
+                'status' => 'false',
+                'message' => $exception->getMessage()
+            ];
         }
-
-        if ($oTask) {
-            $aTags = $this->oStorageTags->find($oTask->getUuid());
+            //@todo allow fields to fill
+        $oTaskStorage = $this->oStorageTask->find($oTaskDraft->getUuid());
+        //for new tasks
+        if (!$oTaskStorage) {
+            $bRes = $this->oStorageTask->create($oTaskDraft->toArray());
+            if ($bRes) {
+                $oTaskStorage = $this->oStorageTask->find($oTaskDraft->getUuid());
+            } else {
+                //@todo make better
+                return [
+                    'status' => 'false',
+                    'message' => 'Task not saved'
+                ];
+            }
+        } else {
+            $bRes =  $this->oStorageTask->save($oTaskStorage, $oTaskDraft->toArray());
+        }
+        if ($bRes) {
+            return ['status' => true, 'data' => $oTaskDraft->toArray()];
+        }
+        if ($oTaskStorage) {
+            //@todo save tags
+            $aTags = $this->oStorageTags->find($oTaskDraft->getUuid());
 //            $aToPushTags = array_diff($aData['tags'], $aTags->values()->toArray());
 //            $aToRemoveTags = array_diff($aTags->values()->toArray(), $aData['tags']);
 //            foreach ($aToPushTags as $item) {
@@ -81,9 +104,11 @@ class TaskRepository implements TaskRepositoryInterface
 //
 //            exit;
 //            unset($aData['tags']);
-            return $this->oStorageTask->save($oTask, $oTask->toArray());
+            if ($bRes) {
+                return ['status' => true, 'data' => $oTaskDraft->toArray()];
+            }
         }
-        return false;
+        return ['status' => false];
     }
 
     public function findAll()
