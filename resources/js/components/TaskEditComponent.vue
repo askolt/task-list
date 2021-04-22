@@ -79,8 +79,11 @@
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="closeModalBtn">Закрыть</button>
-                        <button type="button" class="btn btn-success" v-on:click="saveTask">Добавить</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" v-on:click="closeModalBtn">Close</button>
+                        <button type="button" class="btn btn-success" v-on:click="saveTask">
+                            <template v-if="task.uuid == ''">Add</template>
+                            <template v-else>Save</template>
+                        </button>
                     </div>
                 </div>
             </div>
