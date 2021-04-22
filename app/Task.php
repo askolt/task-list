@@ -25,8 +25,8 @@ class Task
         int $iPriority
     ) {
         $this->sUuid = $sUuid;
-        $this->sName = strip_tags($sName);
-        $this->sDescription = strip_tags($sDescription);
+        $this->sName = htmlentities(strip_tags($sName));
+        $this->sDescription = htmlentities(strip_tags($sDescription));
         if (!$this->setStatus($iStatus)) {
             throwException(new InvalidArgumentException('Invalid status id'));
         }

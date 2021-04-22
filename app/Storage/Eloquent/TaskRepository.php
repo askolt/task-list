@@ -99,6 +99,12 @@ class TaskRepository implements TaskRepositoryInterface
                 $aTagsToPush = array_filter($aTagsToPush, function($value) {
                     return !is_null($value) && $value !== '';
                 });
+                foreach ($aTagsToPush as &$aTag) {
+                    $aTag = htmlentities($aTag);
+                    //@todo check
+                    $aTag = mb_substr($aTag, 0, 49);
+                }
+                unset($aTag);
             }
             $aTags = $this->oStorageTags->find($oTaskDraft->getUuid());
             foreach ($aTags as $aTag) {
