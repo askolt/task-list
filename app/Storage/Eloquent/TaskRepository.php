@@ -119,7 +119,11 @@ class TaskRepository implements TaskRepositoryInterface
 
     public function findAll()
     {
-        return $this->oStorageTask->findAll();
+        $aTasks = $this->oStorageTask->findAll();
+        foreach ($aTasks as $oTask) {
+            $oTask->tags = $this->oStorageTags->find($oTask->uuid)->pluck('name')->toArray();
+        }
+        return $aTasks;
     }
 
     public function findById($id)
