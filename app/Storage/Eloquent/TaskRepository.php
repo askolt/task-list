@@ -54,6 +54,10 @@ class TaskRepository implements TaskRepositoryInterface
     {
         $oTask = $this->oStorageTask->find($uuid);
         if ($oTask) {
+            $aTags = $this->oStorageTags->find($uuid);
+            foreach ($aTags as $aTag) {
+                $this->oStorageTags->remove($aTag);
+            }
             return $this->oStorageTask->remove($oTask);
         }
         return false;
@@ -86,27 +90,29 @@ class TaskRepository implements TaskRepositoryInterface
         } else {
             $bRes =  $this->oStorageTask->save($oTaskStorage, $oTaskDraft->toArray());
         }
+        if ($oTaskStorage) {
+            if (empty($aData['tags'])) {
+                $aTagsToPush = [];
+            } else {
+                $aTagsToPush = $aData['tags'];
+                $aTagsToPush = array_unique($aTagsToPush);
+                $aTagsToPush = array_filter($aTagsToPush, function($value) {
+                    return !is_null($value) && $value !== '';
+                });
+            }
+            $aTags = $this->oStorageTags->find($oTaskDraft->getUuid());
+            foreach ($aTags as $aTag) {
+                $this->oStorageTags->remove($aTag);
+            }
+            foreach ($aTagsToPush as $item) {
+                $this->oStorageTags->create([
+                    'name' => $item,
+                    'task_id' => $oTaskDraft->getUuid()
+                ]);
+            }
+        }
         if ($bRes) {
             return ['status' => true, 'data' => $oTaskDraft->toArray()];
-        }
-        if ($oTaskStorage) {
-            //@todo save tags
-            $aTags = $this->oStorageTags->find($oTaskDraft->getUuid());
-//            $aToPushTags = array_diff($aData['tags'], $aTags->values()->toArray());
-//            $aToRemoveTags = array_diff($aTags->values()->toArray(), $aData['tags']);
-//            foreach ($aToPushTags as $item) {
-//                $oTagsModel->create([
-//                    'name' => $item,
-//                    'task_id' => $oTask->id
-//                ]);
-//            }
-//            var_dump($aToPushTags, $aToRemoveTags);
-//
-//            exit;
-//            unset($aData['tags']);
-            if ($bRes) {
-                return ['status' => true, 'data' => $oTaskDraft->toArray()];
-            }
         }
         return ['status' => false];
     }

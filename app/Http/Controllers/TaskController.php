@@ -38,6 +38,7 @@ class TaskController extends Controller
             'description' => 'required',
             'status' => 'required|numeric',
             'priority' => 'required|numeric',
+            'tags' => 'array',
 
         ]);
         $aData = $request->post();
