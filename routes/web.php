@@ -14,5 +14,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('task_list');
 });
+
+//Route::post('/task/create', [\App\Http\Controllers\TaskController::class, 'create']);
+Route::get('/task/', [\App\Http\Controllers\TaskController::class, 'findAll']);
+Route::get('/task/remove/{id}', [\App\Http\Controllers\TaskController::class, 'remove']);
+Route::post('/task/save/', [\App\Http\Controllers\TaskController::class, 'save']);
