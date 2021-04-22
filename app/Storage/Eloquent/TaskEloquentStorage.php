@@ -3,9 +3,9 @@ namespace App\Storage\Eloquent;
 
 
 use App\Models\TaskModel;
-use App\Storage\StorageInterface;
+use App\Storage\TaskStorageInterface;
 
-class TaskEloquentStorage implements StorageInterface
+class TaskEloquentStorage implements TaskStorageInterface
 {
     private $model = null;
 

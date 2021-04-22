@@ -1,7 +1,7 @@
 <?php
 namespace App\Storage;
 
-interface StorageInterface
+interface TaskStorageInterface
 {
     public function findAll();
     public function find($iId);

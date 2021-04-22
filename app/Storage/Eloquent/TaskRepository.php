@@ -5,23 +5,27 @@ namespace App\Storage\Eloquent;
 
 
 use App\Models\TaskModel;
-use App\Storage\StorageInterface;
+use App\Storage\TaskStorageInterface;
+use App\Storage\TagStorageInterface;
 use App\Storage\TaskRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
 use Ramsey\Uuid\Uuid;
+use App\Task;
 
 class TaskRepository implements TaskRepositoryInterface
 {
-    private $oStorage = null;
+    private $oStorageTask = null;
+    private $oStorageTags = null;
 
-    public function __construct(StorageInterface $oStorage)
+    public function __construct(TaskStorageInterface $oStorageTask, TagStorageInterface $oStorageTags)
     {
-        $this->oStorage = $oStorage;
+        $this->oStorageTask = $oStorageTask;
+        $this->oStorageTags = $oStorageTags;
     }
 //
 //    public function getAll()
 //    {
-//        return $this->oStorage->findAll(1);
+//        return $this->oStorageTask->findAll(1);
 //    }
 //
 //    public function getByUserId()
@@ -33,7 +37,7 @@ class TaskRepository implements TaskRepositoryInterface
 //    {
 //        $aData['uuid'] = Uuid::uuid4()->toString();
 //        $aData['owner_id'] = 1;
-//        $this->oStorage->create($aData);
+//        $this->oStorageTask->create($aData);
 //    }
 //
 //    public function getTagsById($iId)
@@ -48,9 +52,9 @@ class TaskRepository implements TaskRepositoryInterface
 
     public function removeTask($uuid)
     {
-        $oTask = $this->oStorage->find($uuid);
+        $oTask = $this->oStorageTask->find($uuid);
         if ($oTask) {
-            return $this->oStorage->remove($oTask);
+            return $this->oStorageTask->remove($oTask);
         }
         return false;
     }
@@ -58,16 +62,13 @@ class TaskRepository implements TaskRepositoryInterface
     public function save($aData)
     {
         if (empty($aData['uuid'])) {
-            $aData['uuid'] = Uuid::uuid4()->toString();
-            $aData['owner_id'] = 1;
-            $oTask = $this->oStorage->create($aData);
+            $oTask = Task::draft(0, $aData['name'], $aData['description']);
         } else {
-            $oTask = $this->oStorage->find($aData['uuid']);
+            $oTask = $this->oStorageTask->find($aData['uuid']);
         }
 
         if ($oTask) {
-            $oTagsModel = new TagsEloquentStorage();
-            $aTags = $oTagsModel->findAll($oTask->id);
+            $aTags = $this->oStorageTags->find($oTask->getUuid());
 //            $aToPushTags = array_diff($aData['tags'], $aTags->values()->toArray());
 //            $aToRemoveTags = array_diff($aTags->values()->toArray(), $aData['tags']);
 //            foreach ($aToPushTags as $item) {
@@ -80,14 +81,14 @@ class TaskRepository implements TaskRepositoryInterface
 //
 //            exit;
 //            unset($aData['tags']);
-            return $this->oStorage->save($oTask, $aData);
+            return $this->oStorageTask->save($oTask, $oTask->toArray());
         }
         return false;
     }
 
     public function findAll()
     {
-        return $this->oStorage->findAll();
+        return $this->oStorageTask->findAll();
     }
 
     public function findById($id)

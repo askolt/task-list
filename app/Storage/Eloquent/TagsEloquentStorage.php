@@ -3,9 +3,9 @@ namespace App\Storage\Eloquent;
 
 
 use App\Models\TagsModel;
-use App\Storage\StorageInterface;
+use App\Storage\TagStorageInterface;
 
-class TagsEloquentStorage implements StorageInterface
+class TagsEloquentStorage implements TagStorageInterface
 {
     private $model = null;
 
@@ -20,7 +20,7 @@ class TagsEloquentStorage implements StorageInterface
 
     public function find($id)
     {
-        return $this->model::where('id', $id)->first();
+        return $this->model::where('task_id', $id)->get();
     }
 
     public function create(array $aPost)

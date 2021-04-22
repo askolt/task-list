@@ -9,6 +9,9 @@
 <!--                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
                     </div>
                     <div class="modal-body">
+                        <div class="alert alert-danger" role="alert"  v-for="error in errors">
+                            {{error[0]}}
+                        </div>
                         <form action="">
                             <div  class="mb-3">
                                 <label for="form-edit-name">Name task</label>
@@ -90,15 +93,21 @@
         props: ['task'],
         data () {
             return {
+                errors: []
             }
         },
         methods: {
             saveTask () {
+                let _this = this;
                 axios.post('/public/task/save', this.task)
                     .then(function (response) {
                 }).catch(function (error) {
-                    alert('Happened some error. Watch the error in Console Log (F12) for details.');
-                    console.log(error);
+                    if (error.response.status === 422) {
+                        _this.errors = error.response.data.errors;
+                    } else {
+                        alert('Happened some error. Watch the error in Console Log (F12) for details.');
+                        console.log(error);
+                    }
                 })
             },
             closeModalBtn () {
