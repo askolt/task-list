@@ -21,3 +21,7 @@ Route::get('/', function () {
 Route::get('/task/', [\App\Http\Controllers\TaskController::class, 'findAll']);
 Route::get('/task/remove/{id}', [\App\Http\Controllers\TaskController::class, 'remove']);
 Route::post('/task/save/', [\App\Http\Controllers\TaskController::class, 'save']);
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
