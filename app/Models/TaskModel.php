@@ -14,4 +14,10 @@ class TaskModel extends Model
     public $timestamps = true;
 
     public $fillable = ['uuid', 'name', 'description', 'owner_id', 'priority', 'status'];
+
+
+    public function getOwnerId()
+    {
+        return $this->owner_id;
+    }
 }

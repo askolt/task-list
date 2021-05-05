@@ -15,7 +15,7 @@ class Task
     private $sDescription;
     private $iStatus;
     private $iPriority;
-    private $iOwnerId = 1; //@todo set owner
+    private $iOwnerId = null; //it will raise exception if you forget set owner_id
 
     private function __construct(
         string $sUuid,

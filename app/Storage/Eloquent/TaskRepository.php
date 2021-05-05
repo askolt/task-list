@@ -9,6 +9,7 @@ use App\Storage\TaskStorageInterface;
 use App\Storage\TagStorageInterface;
 use App\Storage\TaskRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Ramsey\Uuid\Uuid;
 use App\Task;
 
@@ -77,6 +78,7 @@ class TaskRepository implements TaskRepositoryInterface
         $oTaskStorage = $this->oStorageTask->find($oTaskDraft->getUuid());
         //for new tasks
         if (!$oTaskStorage) {
+            $oTaskDraft->setOwnerId(Auth::guard()->id());
             $bRes = $this->oStorageTask->create($oTaskDraft->toArray());
             if ($bRes) {
                 $oTaskStorage = $this->oStorageTask->find($oTaskDraft->getUuid());
@@ -88,6 +90,7 @@ class TaskRepository implements TaskRepositoryInterface
                 ];
             }
         } else {
+            $oTaskDraft->setOwnerId($oTaskStorage->getOwnerId());
             $bRes =  $this->oStorageTask->save($oTaskStorage, $oTaskDraft->toArray());
         }
         if ($oTaskStorage) {

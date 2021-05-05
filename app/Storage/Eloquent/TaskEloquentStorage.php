@@ -5,6 +5,7 @@ namespace App\Storage\Eloquent;
 use App\Models\TaskModel;
 use App\Storage\TaskStorageInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class TaskEloquentStorage implements TaskStorageInterface
 {
@@ -16,7 +17,7 @@ class TaskEloquentStorage implements TaskStorageInterface
 
     public function findAll()
     {
-        return $this->model::all();
+        return $this->model::where('owner_id', Auth::guard()->id())->get();
     }
 
     public function find($uuid)
