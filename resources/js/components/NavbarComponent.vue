@@ -17,11 +17,11 @@
                 <!-- Right Side Of Navbar -->
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
-                    <li class="nav-item" v-if="guest">
+                    <li class="nav-item" v-if="!user">
                         <router-link to="/login" class="nav-link">Login</router-link>
                     </li>
 
-                    <li class="nav-item" v-if="guest">
+                    <li class="nav-item" v-if="!user">
                         <router-link to="/sign-up" class="nav-link">Sign up</router-link>
                     </li>
                     <li class="nav-item dropdown" v-else>
@@ -46,7 +46,6 @@ export default {
     name: "NavbarComponent",
     data() {
         return {
-            guest: true,
             user: {}
         }
     },
@@ -59,9 +58,16 @@ export default {
     methods: {
         getUserAfterLogin(oUser) {
             this.user = oUser;
-            this.guest = false;
         },
         getUser() {
+            if (localStorage.getItem('taskUser')) {
+                try {
+                    this.user = JSON.parse(localStorage.getItem('taskUser'));
+                    return;
+                } catch (e) {
+                    localStorage.removeItem('taskUser');
+                }
+            }
             let _this = this;
             axios.get('/user').then(function(response) {
                 _this.getUserAfterLogin(response.data)
@@ -77,7 +83,8 @@ export default {
         logout() {
             let _this = this;
             axios.post('/public/logout',{}).then(function() {
-                _this.guest = true;
+                _this.user = {};
+                localStorage.removeItem('taskUser');
                 _this.$router.push('/login');
             }).catch(function (e) {
                 alert('Sorry. Happened an error when logout');
