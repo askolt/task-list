@@ -63,14 +63,15 @@ export default {
             if (localStorage.getItem('taskUser')) {
                 try {
                     this.user = JSON.parse(localStorage.getItem('taskUser'));
-                    return;
+                    return true;
                 } catch (e) {
                     localStorage.removeItem('taskUser');
                 }
             }
             let _this = this;
             axios.get('/user').then(function(response) {
-                _this.getUserAfterLogin(response.data)
+                _this.getUserAfterLogin(response.data);
+                return true;
             }).catch(function (error) {
                 if (error.response.status === 401) {
                     _this.$router.push('/login');
@@ -93,7 +94,11 @@ export default {
         }
     },
     mounted() {
-        this.getUser();
+        if (this.getUser()) {
+            if (this.$route.path !== '/task-list') {
+                this.$router.push('/task-list');
+            }
+        }
     }
 }
 </script>

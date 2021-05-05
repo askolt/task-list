@@ -82,6 +82,7 @@ export default {
             }).then(function(response) {
                 _this.$root.$emit('get-user-after-login-on', response.data);
                 localStorage.taskUser = JSON.stringify(response.data);
+                _this.$router.push('/task-list');
            }).catch(function (error) {
                 if (error.response.status === 422) {
                     _this.errors = error.response.data.errors;
