@@ -25,3 +25,14 @@ Route::post('/task/save/', [\App\Http\Controllers\TaskController::class, 'save']
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/user', [App\Http\Controllers\HomeController::class, 'getUser']);
+
+
+/**
+ * Catch all requests not included "public" in begin string request for SPA
+ * The route must placed at the end of the list
+ */
+Route::get('{all}', function () {
+    return view('task_list');
+})->where('all', '^(?!public).*$');
+

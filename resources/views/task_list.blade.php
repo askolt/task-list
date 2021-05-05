@@ -11,7 +11,10 @@
     </head>
     <body>
         <div id="app">
-            <task-list-component></task-list-component>
+            <navbar-component></navbar-component>
+            <router-link to="/task-list">Task-list</router-link>
+            <router-view></router-view>
+{{--            <task-list-component></task-list-component>--}}
         </div>
     </body>
 </html>

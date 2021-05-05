@@ -7,6 +7,7 @@
 require('./bootstrap');
 
 window.Vue = require('vue').default;
+window.VueRouter = require('vue-router').default;
 
 /**
  * The following block of code may be used to automatically register your
@@ -21,6 +22,19 @@ window.Vue = require('vue').default;
 
 Vue.component('task-list-component', require('./components/TaskListComponent.vue').default);
 Vue.component('task-edit-component', require('./components/TaskEditComponent.vue').default);
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('navbar-component', require('./components/NavbarComponent.vue').default);
+
+const routes = [
+    {path: '/task-list', component: require('./components/TaskListComponent.vue').default},
+    {path: '/example', component: require('./components/ExampleComponent.vue').default},
+    {path: '/login', component: require('./components/LoginComponent.vue').default}
+];
+
+const router = new VueRouter({
+    mode: 'history',
+    routes
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -30,4 +44,5 @@ Vue.component('task-edit-component', require('./components/TaskEditComponent.vue
 
 const app = new Vue({
     el: '#app',
+    router
 });
