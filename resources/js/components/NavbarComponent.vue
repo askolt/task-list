@@ -46,7 +46,7 @@ export default {
     name: "NavbarComponent",
     data() {
         return {
-            user: {}
+            user: null
         }
     },
     created() {
@@ -74,7 +74,9 @@ export default {
                 return true;
             }).catch(function (error) {
                 if (error.response.status === 401) {
-                    _this.$router.push('/login');
+                    if (_this.$route.path !== '/login') {
+                        _this.$router.push('/login');
+                    }
                 } else {
                     alert('Happened some error. Watch the error in Console Log (F12) for details.');
                     console.log(error);
@@ -84,7 +86,7 @@ export default {
         logout() {
             let _this = this;
             axios.post('/public/logout',{}).then(function() {
-                _this.user = {};
+                _this.user = null;
                 localStorage.removeItem('taskUser');
                 _this.$router.push('/login');
             }).catch(function (e) {

@@ -28,7 +28,8 @@ Vue.component('navbar-component', require('./components/NavbarComponent.vue').de
 const routes = [
     {path: '/task-list', component: require('./components/TaskListComponent.vue').default},
     {path: '/example', component: require('./components/ExampleComponent.vue').default},
-    {path: '/login', component: require('./components/LoginComponent.vue').default}
+    {path: '/login', component: require('./components/LoginComponent.vue').default},
+    {path: '/sign-up', component: require('./components/RegisterComponent.vue').default}
 ];
 
 const router = new VueRouter({
